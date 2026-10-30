@@ -1,0 +1,14 @@
+# Contexto de build: el Dockerfile solo copia server/ y public/, pero sin esto
+# Docker manda data/ (cientos de MB) al demonio en cada build.
+.git
+.gitignore
+.gitattributes
+.dockerignore
+.env
+.env.*
+data/
+node_modules/
+test/
+scripts/
+deploy/
+*.md

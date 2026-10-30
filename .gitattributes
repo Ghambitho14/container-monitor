@@ -1,0 +1,4 @@
+# El código se despliega en Linux: siempre LF en el árbol de trabajo.
+* text=auto eol=lf
+*.png binary
+*.tar binary

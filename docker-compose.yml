@@ -1,0 +1,66 @@
+services:
+  socket-proxy:
+    image: tecnativa/docker-socket-proxy:0.3.0
+    container_name: monitor-socket-proxy
+    restart: unless-stopped
+    environment:
+      # Solo lectura: la app lista, inspecciona, lee logs, stats y el stream de eventos.
+      CONTAINERS: 1
+      INFO: 1
+      VERSION: 1
+      PING: 1
+      EVENTS: 1
+      # Todo lo demas denegado explicitamente.
+      POST: 0
+      BUILD: 0
+      COMMIT: 0
+      CONFIGS: 0
+      DISTRIBUTION: 0
+      EXEC: 0
+      IMAGES: 0
+      NETWORKS: 0
+      NODES: 0
+      PLUGINS: 0
+      SECRETS: 0
+      SERVICES: 0
+      SESSION: 0
+      SWARM: 0
+      SYSTEM: 0
+      TASKS: 0
+      VOLUMES: 0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - monitor-internal
+    # Sin `ports`: solo alcanzable desde la red monitor-internal.
+
+  monitor:
+    build: .
+    image: container-monitor:local
+    container_name: container-monitor
+    restart: unless-stopped
+    depends_on:
+      - socket-proxy
+    env_file:
+      - .env
+    environment:
+      PORT: '3000'
+      DOCKER_HOST: tcp://socket-proxy:2375
+    ports:
+      # Solo la IP de Tailscale del servidor (MONITOR_BIND_IP en .env). Nunca 0.0.0.0.
+      - '${MONITOR_BIND_IP:?falta MONITOR_BIND_IP en .env (IP de Tailscale del servidor)}:3000:3000'
+      # Loopback para `tailscale serve`, que pone HTTPS delante (PWA y push).
+      - '127.0.0.1:3000:3000'
+    volumes:
+      - ./data:/app/data
+      - /var/log/snort:/var/log/snort:ro
+    group_add:
+      # gid `adm` en el host: permite leer snort.alert.fast (snort:adm 0640).
+      - '4'
+    networks:
+      - monitor-internal
+    # Sin labels de Traefik: la app no se publica en internet.
+
+networks:
+  monitor-internal:
+    driver: bridge

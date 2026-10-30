@@ -1,0 +1,12 @@
+# Secretos y datos: viven solo en el servidor.
+.env
+.env.*
+!.env.example
+data/
+
+node_modules/
+deploy/deploy.tar
+.claude/
+*.log
+.DS_Store
+Thumbs.db

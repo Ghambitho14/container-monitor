@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Container Monitor</title>
+    <meta name="description" content="Salud, histórico y alertas de los contenedores del VPS" />
+    <meta name="theme-color" content="#0d6e6e" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Monitor" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="rail" aria-label="Navegación">
+        <p class="rail-brand">CM</p>
+        <nav class="rail-nav">
+          <button type="button" class="rail-item active" data-view="containers" id="nav-containers">
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></span>
+            <span class="rail-label">Contenedores</span>
+          </button>
+          <button type="button" class="rail-item" data-view="host" id="nav-host">
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
+            <span class="rail-label">Host</span>
+          </button>
+          <button type="button" class="rail-item" data-view="events" id="nav-events">
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>
+            <span class="rail-label">Eventos</span>
+          </button>
+          <button type="button" class="rail-item" data-view="domains" id="nav-domains">
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 3.8 5.5 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.5-3.8-9s1.3-6.5 3.8-9z"/></svg></span>
+            <span class="rail-label">Dominios</span>
+          </button>
+          <button type="button" class="rail-item" data-view="security" id="nav-security">
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/></svg></span>
+            <span class="rail-label">Seguridad</span>
+          </button>
+          <button type="button" class="rail-item" data-view="settings" id="nav-settings">
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></span>
+            <span class="rail-label">Ajustes</span>
+          </button>
+          <button type="button" class="rail-item hidden" data-view="detail" id="nav-detail">
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></span>
+            <span class="rail-label">Detalle</span>
+            <span class="rail-sub" id="nav-detail-sub"></span>
+          </button>
+          <button type="button" class="rail-item hidden" data-view="logs" id="nav-logs">
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg></span>
+            <span class="rail-label">Logs</span>
+            <span class="rail-sub" id="nav-logs-sub"></span>
+          </button>
+        </nav>
+        <button type="button" id="btn-install" class="rail-item rail-bottom hidden" title="Instalar en este dispositivo">
+          <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></span>
+          <span class="rail-label">Instalar</span>
+        </button>
+        <button type="button" id="btn-alerts" class="rail-item" title="Alertas en este dispositivo">
+          <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15L6 16z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span>
+          <span class="rail-label" id="alerts-label">Alertas</span>
+        </button>
+        <button type="button" id="btn-refresh" class="rail-item" title="Actualizar">
+          <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66L20 9"/><path d="M20 4v5h-5"/></svg></span>
+          <span class="rail-label">Actualizar</span>
+        </button>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow" id="top-eyebrow">Monitor</p>
+            <h1 id="top-title">Contenedores</h1>
+            <p class="sub" id="status-line">Conectando…</p>
+            <!-- Solo aparece mientras el sondeo falla; se va sola al recuperarse. -->
+            <p class="conn" id="conn-line" hidden></p>
+          </div>
+          <div class="top-status">
+            <span class="updated" id="updated-line" title="Última respuesta del monitor"></span>
+          </div>
+          <div class="top-actions" id="logs-actions" hidden>
+            <button type="button" id="btn-pause" class="btn" disabled>Pausar</button>
+            <button type="button" id="btn-clear" class="btn ghost" disabled>Limpiar</button>
+            <label class="check">
+              <input type="checkbox" id="auto-scroll" checked />
+              Seguir el final
+            </label>
+          </div>
+          <div class="top-actions" id="range-actions" hidden>
+            <div class="range" id="range-chips" role="group" aria-label="Rango"></div>
+          </div>
+        </header>
+
+        <!-- Lo que está mal, arriba y siempre visible. -->
+        <div id="alert-band" class="alert-band" hidden></div>
+
+        <div id="host-strip" class="host-strip" hidden></div>
+
+        <div class="view view-containers" id="view-containers">
+          <div class="filters">
+            <input type="search" id="filter" placeholder="Filtrar por app o contenedor…" aria-label="Filtrar contenedores" autocomplete="off" />
+            <label class="check">
+              <input type="checkbox" id="only-problems" />
+              Solo problemas
+            </label>
+          </div>
+          <div id="container-list" class="apps-grid"></div>
+        </div>
+
+        <div class="view view-host hidden" id="view-host">
+          <div id="host-body" class="host-body"></div>
+        </div>
+
+        <div class="view view-detail hidden" id="view-detail">
+          <div id="detail-body" class="detail-body"></div>
+        </div>
+
+        <div class="view view-events hidden" id="view-events">
+          <div class="filters">
+            <div class="chips" id="event-sev-chips" role="group" aria-label="Severidad">
+              <button type="button" class="chip active" data-sev="" aria-pressed="true">Todo</button>
+              <button type="button" class="chip" data-sev="crit" aria-pressed="false">Crítico</button>
+              <button type="button" class="chip" data-sev="warn" aria-pressed="false">Aviso</button>
+              <button type="button" class="chip" data-sev="info" aria-pressed="false">Info</button>
+            </div>
+            <input type="search" id="event-filter" placeholder="Filtrar por nombre o tipo…" aria-label="Filtrar eventos" autocomplete="off" />
+            <label class="check">
+              <input type="checkbox" id="only-notified" />
+              Solo enviados
+            </label>
+          </div>
+          <div id="events-body" class="events-body"></div>
+        </div>
+
+        <div class="view view-domains hidden" id="view-domains">
+          <div id="domains-body" class="domains-body"></div>
+        </div>
+
+        <div class="view view-security hidden" id="view-security">
+          <div id="security-body" class="security-body"></div>
+        </div>
+
+        <div class="view view-settings hidden" id="view-settings">
+          <div id="settings-body" class="settings-body"></div>
+          <div id="settings-bar" class="settings-bar" hidden></div>
+        </div>
+
+        <div class="view view-logs hidden" id="view-logs">
+          <!-- Sin aria-live: un stream de logs inundaría al lector de pantalla. -->
+          <pre id="log-view" class="log-view"></pre>
+        </div>
+      </section>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <script src="/app.js"></script>
+  </body>
+</html>
