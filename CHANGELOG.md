@@ -2,6 +2,12 @@
 
 Fechas en UTC.
 
+## 2.4.1 — 2026-11-12
+
+- **Contenedores silenciados (`ALERT_MUTE_CONTAINERS`, pestaña Ajustes, en vivo):** sus eventos quedan en el
+  historial y en `/api/events`, pero no van a Telegram ni al móvil. Acepta el nombre de Docker o el del
+  panel y `*`. Pensado para `coolify-sentinel`, que Coolify recrea solo a cada rato.
+
 ## 2.4.0 — 2026-10-14
 
 - **`GET /api/containers/:id/logs?since=&tail=`:** logs ya escritos en texto, sin WebSocket. La Oficina

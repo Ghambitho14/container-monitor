@@ -179,6 +179,7 @@ que guarda el panel. El panel nunca modifica el `.env`.
 | `ALERT_CONTAINER_MEM_PCT` | 90 | Memoria de un contenedor contra su propio límite |
 | `ALERT_RESTART_LOOP_COUNT` / `_MINUTES` | 3 / 10 | Qué cuenta como bucle de reinicio |
 | `DOMAIN_EXTRA` | — | Dominios o rutas extra (`host` o `host/ruta`, separados por comas) |
+| `ALERT_MUTE_CONTAINERS` | — | Contenedores cuyos eventos quedan en el historial pero no van a Telegram ni push (separados por comas, `*` = cualquier texto; p. ej. `coolify-sentinel`) |
 | `SNORT_IGNORE_CIDRS` | `100.64.0.0/10`, … | Orígenes cuyas alertas de Snort se ignoran |
 | `DIGEST_HOUR` | 8 | Hora (reloj del contenedor) del resumen diario silencioso |
 | `PUSH_MIN_SEVERITY` | warn | Severidad mínima que llega por push |

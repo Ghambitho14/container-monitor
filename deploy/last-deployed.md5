@@ -1,10 +1,10 @@
 c1a0ea78d7c31e1f9b5ef82b9aa4fc4f  .dockerignore
-dfacd7e46fe34c2ee3dfd11d5cb91dfa  .env.example
+c952c7a6cc702fea065fa3fda38112ba  .env.example
 8186fe0d20631215749178455fa9c990  Dockerfile
-e8845cadd0c1064a7320ef4eee1fc359  README.md
+d9c155a33da225fafb89d30731155daf  README.md
 4c7fd6b87826369b5b7047121d478aa0  docker-compose.yml
-78dcd5ed7da4788910a6d42b2e6397ea  package-lock.json
-15c3e78809f6ac85ab598f575dbfb48a  package.json
+7f0d67c2ee6b13a8b13f6cc370dcfa6f  package-lock.json
+a8a4b1b59d40ba652aba00d175944c8b  package.json
 66c55628696dce904394ae436a33ae32  public/app.js
 0794fe1f32e860b51315b000827db7b4  public/icons/apple-touch-icon.png
 a052e284eb8f904c92e6a1ca8f7a6d39  public/icons/badge-96.png
@@ -29,8 +29,8 @@ ec4718c0cf2a4719cfa4fca1a1f91872  server/domains.js
 26ad3d9248590616675e55db0ead6629  server/index.js
 964a93e18d1e792c1db784e76591dc19  server/notify.js
 02b4ae1c5637169d1121c2ddc30475e4  server/push.js
-34a678cd8ba04747c25ff79a517408cd  server/settings.js
+28c9a8581787a097dfa083561cb7b573  server/settings.js
 f196062e06dfbc0a82b16e1bc31c760c  server/snort.js
 d7e80f8e6af238a3e523084b330e2cd9  server/stats.js
-27d547cdb9ae19ef7b967ad6d291a75e  server/watcher.js
+b11369f901e8161aa8e013bdcce98a9c  server/watcher.js
 ac74eef8160868ffb14c4e0beb950183  setup-telegram.sh

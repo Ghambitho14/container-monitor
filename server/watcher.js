@@ -63,9 +63,29 @@ function pruneDedupe(ts) {
   }
 }
 
+/**
+ * ¿Alguno de los nombres coincide con la lista de silenciados? `*` vale por
+ * cualquier texto y no importan las mayusculas.
+ */
+function isMuted(names, patterns = config.containers.mute || []) {
+  const clean = names.filter(Boolean).map((n) => String(n).replace(/^\//, ''));
+  return patterns.some((p) => {
+    const re = new RegExp(`^${p.split('*').map((s) => s.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('.*')}$`, 'i');
+    return clean.some((n) => re.test(n));
+  });
+}
+
+/** Nombre del panel y nombre de Docker del contenedor del evento. */
+function namesOf(event) {
+  if (!event.containerId) return [];
+  const c = prev.get(event.containerId) || lastSnapshot.find((x) => x.id === event.containerId);
+  return [event.name, c?.name];
+}
+
 function record(events, event) {
   // El historial se guarda siempre; el antirrebote solo decide si se notifica.
-  const passes = shouldEmit(dedupeKey(event), event.ts);
+  // Un contenedor silenciado se guarda igual, pero no se notifica.
+  const passes = shouldEmit(dedupeKey(event), event.ts) && !isMuted(namesOf(event));
   // `notified` se da por bueno de entrada si hay algun canal; si luego ninguno
   // lo entrega, `flush` lo vuelve a poner a 0.
   const channels = notify.enabled || push.hasSubscribers();
@@ -462,4 +482,4 @@ const getHost = () => lastHost;
 const getHostAlerts = () => [...hostState].filter(([, on]) => on).map(([kind]) => kind);
 const getHealth = () => ({ ...health, hostAlerts: getHostAlerts() });
 
-module.exports = { start, tick, requestTick, emitExternal, getSnapshot, getHost, getHostAlerts, getHealth };
+module.exports = { start, tick, requestTick, emitExternal, getSnapshot, getHost, getHostAlerts, getHealth, isMuted };

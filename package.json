@@ -1,6 +1,6 @@
 {
   "name": "container-monitor",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Panel de salud, historico y alertas para los contenedores del VPS",
   "main": "server/index.js",
   "scripts": {

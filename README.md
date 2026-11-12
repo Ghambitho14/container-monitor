@@ -181,6 +181,7 @@ saves. The panel never modifies `.env`.
 | `ALERT_CONTAINER_MEM_PCT` | 90 | A container's memory against its own limit |
 | `ALERT_RESTART_LOOP_COUNT` / `_MINUTES` | 3 / 10 | What counts as a restart loop |
 | `DOMAIN_EXTRA` | — | Extra domains or paths (`host` or `host/path`, comma-separated) |
+| `ALERT_MUTE_CONTAINERS` | — | Containers whose events are kept in history but not sent to Telegram or push (comma-separated, `*` wildcard; e.g. `coolify-sentinel`) |
 | `SNORT_IGNORE_CIDRS` | `100.64.0.0/10`, … | Sources Snort alerts are ignored for |
 | `DIGEST_HOUR` | 8 | Hour (container clock) of the silent daily digest |
 | `PUSH_MIN_SEVERITY` | warn | Lowest severity sent as push |

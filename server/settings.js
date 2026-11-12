@@ -121,6 +121,12 @@ const SCHEMA = [
     key: 'containers.restartLoopMinutes', env: 'ALERT_RESTART_LOOP_MINUTES', def: 10, type: 'int', min: 1, max: 120,
     unit: 'min', group: 'containers', apply: 'live', label: 'Ventana del bucle de reinicio', help: '',
   },
+  {
+    key: 'containers.mute', env: 'ALERT_MUTE_CONTAINERS', def: [], type: 'list', group: 'containers', apply: 'live',
+    label: 'Contenedores silenciados',
+    help: 'Uno por línea (nombre de Docker o el que muestra el panel; * = cualquier texto). Sus eventos quedan en el historial y en /api/events, pero no van a Telegram ni al móvil. Útil para los que se recrean solos, como coolify-sentinel.',
+    itemValid: (v) => /^[\w.*-]{1,100}$/.test(v), itemHelp: 'letras, números, . _ - y *', maxItems: 50,
+  },
 
   {
     key: 'domains.extra', env: 'DOMAIN_EXTRA', def: [], type: 'list', group: 'domains', apply: 'live',
